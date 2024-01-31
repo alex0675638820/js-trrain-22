@@ -10,7 +10,9 @@ class Participant {
   // Метод dispatchMessage відправляє повідомлення за допомогою відповідного засобу комунікації.
   // Він приймає один параметр - text - текст повідомлення, яке потрібно відправити.
   dispatchMessage(message) {
-	this.text = message;
+	// this.text = message;
+	const formattedMessage = this.prepareMessage(message);
+	this.communicator.transmit(formattedMessage);
 	}
   // Метод prepareMessage приймає text та повертає  `[${this.alias}]: ${text}`
 	prepareMessage(text) {
@@ -22,7 +24,7 @@ class SMSCommunicator {
   // Статичний метод transmit відправляє SMS.
   // Він приймає один параметр - message - текст повідомлення, яке потрібно відправити, та виводимо в консоль `Відправлено SMS: ${message}`.
   static transmit(message) {
-	Console.log(`Відправлено SMS: ${message}`);
+	console.log(`Відправлено SMS: ${message}`);
   }
 }
 // Клас EmailCommunicator відповідає за відправку повідомлень через Email.
@@ -30,7 +32,7 @@ class EmailCommunicator {
   // Статичний метод transmit відправляє Email.
   // Він приймає один параметр - message - текст повідомлення, яке потрібно відправити та виводимо в консоль `Відправлено Email: ${message}`.
   static transmit(message) {
-	Console.log(`Відправлено SMS: ${message}`);
+	console.log(`Відправлено SMS: ${message}`);
   }
 }
 

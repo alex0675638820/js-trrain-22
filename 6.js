@@ -29,7 +29,7 @@ class TwoStepProcessor extends AuthProcessor {
   // Виводить повідомлення про успішну аутентифікацію: Вхід дозволено з двофакторною аутентифікацією, і повертає true.
   // Якщо дані не вірні, запит на аутентифікацію передається наступному обробнику в ланцюгу, super.validate(username, passkey).
   validate(username, passkey) {
-	if(username === "john" && passkey === "password" && isValidTwoStepCode()){
+	if(username === "john" && passkey === "password" && this.isValidTwoStepCode()){
 		console.log("Вхід дозволено з двофакторною аутентифікацією");
 		return true;
 	} else {
@@ -48,7 +48,7 @@ class RoleProcessor extends AuthProcessor {
   // Якщо роль користувача - гість (guest), аутентифікація успішна.
   // Виводить повідомлення про успішну аутентифікацію Вхід дозволено з роллю гостя, і повертає true.
   // Якщо роль не відповідає, запит на аутентифікацію передається наступному обробнику в ланцюгу.
-  validate() {
+  validate(username, passkey) {
 	if(username === "guest") {
 		console.log("Вхід дозволено з роллю гостя");
 		return true;
@@ -64,7 +64,7 @@ class CredentialsProcessor extends AuthProcessor {
   // Якщо облікові дані вірні, username=admin, та passkey=admin123, аутентифікація успішна.
   // Виводить повідомлення про успішну аутентифікацію Вхід дозволено за обліковими даними, і повертає true.
   // Якщо облікові дані не вірні, запит на аутентифікацію передається наступному обробнику в ланцюгу.
-  validate() {
+  validate(username, passkey) {
 	if(username === "admin" && passkey === "admin123") {
 		console.log("Вхід дозволено за обліковими даними");
 		return true;
@@ -73,7 +73,6 @@ class CredentialsProcessor extends AuthProcessor {
 	}
   }
 }
-
 // Клас Builder для створення об'єкта ланцюга обробників.
 class ProcessorBuilder {
   // Конструктор який не приймає вхідні значення
@@ -86,21 +85,23 @@ class ProcessorBuilder {
   // Метод add для додавання нового обробника в ланцюг.
   // Якщо це перший обробник, він зберігається як перший і останній.
   // Якщо це не перший обробник, він додається в кінець ланцюга, і стає останнім.
-  // Повертає this.
   add(processor) {
 	if(this.firstProcessor) {
-		this.firstProcessor = processor;
+		this.lastProcessor.setNextProcessor(processor);
+		// this.firstProcessor = processor;
 		this.lastProcessor = processor;
 	} else {
-		this.lastProcessor.setNextProcessor(processor);
-		// this.lastProcessor = processor;
-		return this.lastProcessor;
-	}
+		this.firstProcessor = processor;
+		// this.lastProcessor.nextProcessor(processor);
+		this.lastProcessor = processor;
+	}	
+	// Повертає this.
+		return this;
   }
   // Метод create для створення ланцюга обробників.
   // Повертає перший обробник у ланцюгу.
   create() {
-	return this.this.firstProcessor;
+	return this.firstProcessor;
   }
 }
 console.log("Завдання 6 ====================================");

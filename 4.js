@@ -26,7 +26,7 @@ class HoneyDecorator {
   get price() {
   const honey = 0.5;
   // і додаткову вартість меду, яку за замовчуванням встановлюємо на 0.5, і множимо на this.amount.
-	return this.price + honey * this.amount;
+	return this.drink.price + honey * this.amount;
 }
   // Метод prepare відповідає за приготування напою з медом.
   // Він виводить в консоль Приготування ${this.name} з медом

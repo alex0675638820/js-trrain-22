@@ -7,8 +7,8 @@ class Writer {
   // Сетер для властивості content. Він приймає значення newContent (новий текст),
   // який потрібно встановити як поточний текст. Кожен раз, коли присвоюється нове значення,
   // викликається метод #store(), який зберігає поточний стан тексту у версіях.
-  set content(content) {
-	this.#content = content;
+  set content(newContent) {
+	this.#content = newContent;
 	this.#store();
 }
   // Метод гетер для властивості content, повертає this.#content.
@@ -23,7 +23,7 @@ class Writer {
   // Метод restore відновлює попередній стан тексту, викликаючи статичний метод класу Version, restore.
   // Цей метод повертає останню збережену версію тексту, яку ми встановлюємо як поточний текст.
   restore() {
-	this.content = Version.restore().content;
+	this.#content = Version.restore().content;
   }
 }
 // Клас Version відповідає за створення та зберігання версій тексту.
@@ -34,7 +34,7 @@ class Version {
   }
   // Це вхідний аргумент, який представляє теку збережену версію тексту.
   // Властивість #versions це приватний статичний масив, пустий за замовчуванням, що зберігає всі створені версії.
-  #versions = [];
+  static #versions = [];
   // Статичний метод create приймає аргумент content (текст версії) і створює новий екземпляр класу Version в який передає content .
   // Створений екземпляр додається до масиву версій versions.
   static create(content) {
@@ -43,6 +43,7 @@ class Version {
   // Статичний метод restore видаляє останный элемент масиву,
   // та повертає останню збережену версію тексту з масиву версій this.#versions[this.#versions.length - 1] .
   static restore() {
+	this.#versions.pop();
 	return this.#versions[this.#versions.length - 1];
   }
 }
